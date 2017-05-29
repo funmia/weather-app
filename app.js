@@ -1,11 +1,17 @@
-var icon;
+var temperature;
 var loc;
 var desc;
+var icon;
+var humidity;
+var wind;
 
 window.onload = function() {
-  icon = document.getElementById("icon");
+  temperature = document.getElementById("temperature");
   loc = document.getElementById("location");
   desc = document.getElementById("description");
+  icon = document.getElementById("icon");
+  humidity = document.getElementById("humidity");
+  wind = document.getElementById("wind");
 }
 
 function sendRequest() {
@@ -22,18 +28,23 @@ function sendRequest() {
 }
 sendRequest();
 
-
 function getWeather(data) {
   weather = {}
+  weather.temperature = data.main.temp;
   weather.location = data.name;
-  weather.code = data.weather[0].id;
   weather.description = data.weather[0].description;
+  weather.code = data.weather[0].id;
+  weather.humidity = data.main.humidity;
+  weather.wind = data.wind.speed;
 
   showWeather(weather);
 }
 
 function showWeather(weather) {
-  icon.src = "imgs/codes/" + weather.code + ".png"
+  temperature.innerHTML = weather.temperature;
   loc.innerHTML = weather.location;
   desc.innerHTML = weather.description;
+  icon.src = "imgs/codes/" + weather.code + ".png";
+  humidity.innerHTML = weather.humidity;
+  wind.innerHTML = weather.wind;
 }
