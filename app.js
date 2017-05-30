@@ -1,3 +1,5 @@
+const APPID = '9de3faeca88c17887b1c8ba5b63ac99f';
+const url = "http://api.openweathermap.org/data/2.5/weather?q=London&APPID=" + APPID;
 var temperature;
 var loc;
 var desc;
@@ -14,23 +16,32 @@ window.onload = function() {
   wind = document.getElementById("wind");
 }
 
-function sendRequest() {
-  var myRequest = new XMLHttpRequest();
-    myRequest.onreadystatechange = function() {
-      if (myRequest.readyState == 4) {
-        var data = JSON.parse(myRequest.responseText);
-        console.log(data);
-        getWeather(data);
-      }
-    };
-  myRequest.open('GET',"http://api.openweathermap.org/data/2.5/weather?q=London&APPID=9de3faeca88c17887b1c8ba5b63ac99f", true);
-  myRequest.send();
-}
-sendRequest();
+// function sendRequest() {
+//   var myRequest = new XMLHttpRequest();
+//     myRequest.onreadystatechange = function() {
+//       if (myRequest.readyState == 4 && myRequest.status == 200) {
+//         var data = JSON.parse(myRequest.responseText);
+//         console.log(data);
+//         getWeather(data);
+//       }
+//     };
+//   myRequest.open('GET', url, true);
+//   myRequest.send();
+// }
+// sendRequest();
+
+fetch(url)
+  .then((resp) => resp.json()) // Transform the data into json
+  .then(function(data) {
+    getWeather(data);
+    })
+  .catch(function(error) {
+    console.log('error');
+  });
 
 function getWeather(data) {
   weather = {}
-  weather.temperature = data.main.temp;
+  weather.temperature = K2C(data.main.temp);
   weather.location = data.name;
   weather.description = data.weather[0].description;
   weather.code = data.weather[0].id;
@@ -47,4 +58,12 @@ function showWeather(weather) {
   icon.src = "imgs/codes/" + weather.code + ".png";
   humidity.innerHTML = weather.humidity;
   wind.innerHTML = weather.wind;
+}
+
+function K2F(k){
+    return Math.round(k*(9/5)-459.67);
+}
+
+function K2C(k){
+    return Math.round(k - 273.15);
 }
